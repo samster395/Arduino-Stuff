@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)?pitch=15 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>
+body {
+    background: #2c3e50ff;
+    color: red;
+}
+/*button {
+    height: 25px;
+    width: 25px;
+    background-color: #ffffff80;
+    border-radius: 50%;
+    display: inline-block;
+    border-style: none;
+    margin: 2px;
+}*/
+
+button:focus {
+    outline: 0;
+}
+a:visited {
+    color: green;
+}
+
+a:link {
+    color: red;
+}
+
+#framenumber {
+    width: 40px;
+}
+
+#framenum {
+    width: 40px;
+}
+
+#framespeed {
+    width: 60px;
+}
+
+#wh {
+    margin-top: 10px;
+}
+
+#frames {
+    margin-top: 5px;
+}
+</style>
+<title>Light Control</title>
+<style>body { text-align: center; font-family: "Trebuchet MS", Arial; margin-left:auto; margin-right:auto;}
+.slider { width: 300px; } .slider2 { width: 300px; }</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head><body><h1>Light Control</h1>
+Light IP: <input type="text" id="LightIP" name="LightIP" value="192.168.0.40"><br><br>
+<button onclick="Home()">Home Light</button> | <button onclick="LEDo()">Turn LED off</button><br><br>
+Select LED colour: <input type="color" id="myColor" value="#0000ff"> <button onclick="led()">Send</button>
+<p>Pitch: <span id="servoPos">104</span></p>
+<input type="range" min="0" max="180" class="slider" id="pitch" onchange="servo(this.value)" value="5">
+<p>Yaw: <span id="servoPos2">105</span></p>
+<input type="range" min="0" max="180" class="slider" id="yaw" onchange="servo2(this.value)" value="5">
+<br><br><br><br>
+
+<input type="button" onclick="Clear()" value="Clear Lit LEDs"></input> |
+<input type="button" onclick="ClearFrames()" value="Clear Saved Frames"> </input>
+
+<br>
+<br>
+<input type="button" id="b2" onclick="FrameSave()" value="Frame Save"> </input> |
+<input id="framenum" name="frame" type="number" value="">
+<input type="button" id="b2" onclick="FrameUpdate(document.getElementById('framenum').value)" value="Frame Update"> </input> |
+<input type="button" onclick="FramesPlay()" value="Play Saved Frames"> </input> |
+<input type="button" onclick="FramesStop()" value="Stop Playing"> </input>
+<br>
+<br>
+<div id="grid"></div>
+<br> Enter Frame:
+<input id="framenumber" name="frame" type="number" value="">
+<input type="button" value="Load" onclick="Clear(); FrameLoad(document.getElementById('framenumber').value)"> Animation Speed (In ms):
+<input id="framespeed" name="frspeed" type="number" value="1000"> Loop:
+<input type="checkbox" id="floop" checked>
+<br>
+<div id="frames"></div>
+
+            <script>
+            function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+            $.ajaxSetup({timeout:1000}); function led() { 
+            var x = document.getElementById("myColor").value;
+            $.get("http://" + document.getElementById("LightIP").value + "?led=R" + hexToRgb(x).r  + "G" + hexToRgb(x).g  + "B" + hexToRgb(x).b + "&"); 
+            {Connection: close};
+            }
+                        
+      var slider = document.getElementById("pitch");
+            var servoP = document.getElementById("servoPos"); 
+      servoP.innerHTML = slider.value;
+            slider.oninput = function() { slider.value = this.value; servoP.innerHTML = this.value; }
+            $.ajaxSetup({timeout:1000}); function servo(pos) { 
+            $.get("http://" + document.getElementById("LightIP").value + "?pitch=" + pos + "&"); 
+            {Connection: close};
+            }
+      
+      var slider2 = document.getElementById("yaw");
+            var servoP2 = document.getElementById("servoPos2"); 
+            servoP2.innerHTML = slider2.value;
+            slider2.oninput = function() { slider2.value = this.value; servoP2.innerHTML = this.value; }
+            $.ajaxSetup({timeout:1000}); function servo2(pos) { 
+            $.get("http://" + document.getElementById("LightIP").value + "?yaw=" + pos + "&"); 
+            {Connection: close};
+            }
+
+            $.ajaxSetup({timeout:1000}); function Home() { 
+            $.get("http://" + document.getElementById("LightIP").value + "?home=" + 1 + "&"); 
+            {Connection: close};
+            }
+			
+			$.ajaxSetup({timeout:1000}); function LEDo() { 
+            $.get("http://" + document.getElementById("LightIP").value + "?off=" + 1 + "&"); 
+            {Connection: close};
+            }
+			
+		var FrameNum = 0
+        var FrameArr = [0];
+
+        function FrameSave() {
+            FrameNum++;
+            var LightIP = document.getElementById('LightIP').value;
+			var Pitch = document.getElementById('pitch').value;
+			var Yaw = document.getElementById('yaw').value;
+			var Color = document.getElementById("myColor").value;
+			var CrStr = "R" + hexToRgb(Color).r  + "G" + hexToRgb(Color).g  + "B" + hexToRgb(Color).b;
+			var obj = {
+			"LightIP": LightIP,
+			"Pitch": Pitch,
+			"Yaw": Yaw,
+			"LEDc": CrStr
+			};
+            var json_str = JSON.stringify(obj);
+            localStorage.setItem('LC_FR' + FrameNum, json_str);
+            Frame(FrameNum);
+            Frame();
+        }
+
+        function FrameUpdate(frame) {
+            var LightIP = document.getElementById('LightIP').value;
+			var Pitch = document.getElementById('pitch').value;
+			var Yaw = document.getElementById('yaw').value;
+			var Color = document.getElementById("myColor").value;
+			var CrStr = "R" + hexToRgb(Color).r  + "G" + hexToRgb(Color).g  + "B" + hexToRgb(Color).b;
+			var obj = {
+			"LightIP": LightIP,
+			"Pitch": Pitch,
+			"Yaw": Yaw,
+			"LEDc": CrStr
+			};
+            var json_str = JSON.stringify(obj);
+            localStorage.setItem('LC_FR' + frame, json_str);
+        }
+
+        function ClearFrames() {
+            var r = confirm("Are you sure you want to delete all saved frames?");
+            if (r == true) {
+                document.getElementById('frames').innerHTML = "Frames: 0";
+                FrameNum = 0
+                FrameArr = [0];
+                localStorage.clear();
+            } else {
+
+            }
+        }
+
+        function Frame(variable) {
+            if (typeof variable !== 'undefined') {
+                FrameArr.push(variable);
+                var json_str2 = JSON.stringify(FrameArr);
+                localStorage.setItem('LC_FRAMES', json_str2);
+            } else {
+                if (localStorage.getItem('LC_FRAMES') === null) {
+                    document.getElementById('frames').innerHTML = "Frames: 0"
+                } else {
+                    frames = localStorage.getItem('LC_FRAMES');
+                    document.getElementById('frames').innerHTML = "";
+                    framesp = JSON.parse(frames)
+                    document.getElementById('frames').innerHTML = "Frames: " + Math.max(...framesp);
+                }
+
+            }
+        }
+
+        var FTimeout;
+        var FTimeout2;
+
+        function FramesPlay() {
+            framespeed = document.getElementById('framespeed').value;
+            floop = document.getElementById("floop");
+            if (localStorage.getItem('LC_FRAMES') === null) {
+
+            } else {
+                frames = localStorage.getItem('LC_FRAMES');
+                framesp = JSON.parse(frames);
+                var i = 1, howManyTimes = Math.max(...framesp) + 1;
+
+                function f() {
+                    //Clear();
+                    LitLed = localStorage.getItem('LC_FR' + i);
+                    LitLedJS = JSON.parse(LitLed)
+					//console.log("http://" + LitLedJS.LightIP + "?pitch=" + LitLedJS.Pitch + "&");
+					$.get("http://" + LitLedJS.LightIP + "?pitch=" + LitLedJS.Pitch + "&");
+					$.get("http://" + LitLedJS.LightIP + "?yaw=" + LitLedJS.Yaw + "&");
+					$.get("http://" + LitLedJS.LightIP + "?led=" + LitLedJS.LEDc + "&");
+                        //document.getElementById(element).classList.add('lit');
+						//$.get("http://" + document.getElementById("LightIP").value + "?yaw=" + pos + "&");
+					console.log('LC_FR' + i);
+                    i++;
+                    if (i < howManyTimes) {
+                        FTimeout = setTimeout(f, framespeed);
+                    }
+                }
+                f();
+
+                if (floop.checked) {
+                    FTimeout2 = setTimeout(FramesPlay, 2000);
+                }
+            }
+        }
+
+        function FramesStop() {
+            clearTimeout(FTimeout);
+            clearTimeout(FTimeout2);
+        }
+
+        function FrameLoad(frame) {
+            LitLed = localStorage.getItem('LC_FR' + frame);
+            LitLedJS = JSON.parse(LitLed)
+            LitLedJS.forEach(function(element) {
+                document.getElementById(element).classList.add('lit');
+            });
+        }
+
+        window.onload = Frame();
+			
+            </script>
+            
+
+</body></html>
