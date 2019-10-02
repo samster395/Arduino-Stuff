@@ -6,11 +6,11 @@
 // Send "toggle" to stop/start the capture
 // Send "sdinfo" to view SD card space info
 // Send "svideo" to take a picture as fast as possible, will need to stop capture by removing power as it doesnt have time to read the serial input when in this mode
-
+// Send "restart" to reboot the camera
 #include "esp_camera.h"
 #include "Arduino.h"
-#include "FS.h" //sd card esp32
-#include "SD_MMC.h" //sd card esp32
+#include "FS.h"
+#include "SD_MMC.h"
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
@@ -56,7 +56,7 @@ String message = "";
 bool capture = true;
 bool video = false;
 int fileNumber = 1;
-const char *CFGfile = "/config.txt";  // <- SD library uses 8.3 CFGfiles
+const char *CFGfile = "/config.txt";
 String response;
 
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -181,6 +181,8 @@ class MyCallbacks: public BLECharacteristicCallbacks {
           
         } else if (rxValue.find("svideo") != -1) {
             video = true;
+        } else if (rxValue.find("restart") != -1) {
+            ESP.restart();
         }
         
         } } }; 
@@ -243,14 +245,12 @@ void setup() {
 
 void loop() {
     current_millis = millis();
-
     if (video) {
       ImageToSd();
     } else if (current_millis - last_capture_millis > capture_interval) { // Take another picture
       last_capture_millis = millis();
       if (capture) {
         ImageToSd();
-        //Serial.print(getCpuFrequencyMhz());
       }
     }
 
