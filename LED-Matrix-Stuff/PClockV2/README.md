@@ -4,7 +4,7 @@ Note: The ways some of the functions are achieved may not be the best way to do 
 ### Features
 * NTP Time/Date
 * Weather (Temperature, Condition, Humidity, Wind speed)
-* Web interface with API (Port 82)
+* Web interface with API and settings (Can be setup from web interface)
 * [Phone Integration](#phone-integration) (Show when notification received or call incoming)
 * Auto Brightness (Using phototransistor)
 * [OTA Update](#ota-update)
@@ -20,14 +20,12 @@ Note: The ways some of the functions are achieved may not be the best way to do 
 
 See the PxMatrix Readme on how to wire the panel up and you might need to change some settings in the setup() to make it work correctly.
 
-Edit the settings in the .ino file.
-
-You will need an [OpenWeatherMap](https://openweathermap.org) API Key.
-
 ### First Boot
+You will need an [OpenWeatherMap](https://openweathermap.org) API Key.
 
 * Upon first boot the device will create an access point, connect to that and go to htttp://192.168.4.1 and connect it to the WiFi network.
 * The device will then restart and flash the end of the IP on the screen, you can use that to go to the clock's web interface.
+* On that website you can complete the setup, go to it and click on settings, all is explained there.
 
 ## Phone Integration
 
@@ -95,7 +93,7 @@ Shows call incoming on the clock for 28 seconds - The time it takes a phone (wel
 
 ### Rotation
 
-An unused (by me) function to change between the mode (might not work properly)
+Rotates between weather and date modes
 
 <code>/api?rotation=1</code>
 
@@ -106,6 +104,4 @@ An unused (by me) function to change between the mode (might not work properly)
 
 The sketch can be updated over WiFi
 
-1. Run a web server and put the espupdate folder on it and edit the index.php with your ESP's MAC Address
-2. Set the URL in the settings
-3. Export your compiled binaries from the Arduino IDE and put them on the web server in the bin folder with the name pclock-1.0.ino (the 1.0 being a version number higher than the current one on the ESP, Remember to change the version number in the sketch too, otherwise it will go into a update loop.)
+More details [here](https://arduino-esp8266.readthedocs.io/en/latest/ota_updates/readme.html#arduino-ide).
