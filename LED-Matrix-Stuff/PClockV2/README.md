@@ -31,7 +31,7 @@ You will need an [OpenWeatherMap](https://openweathermap.org) API Key.
 
 So the clock has some phone integration by being able to notify you when you get a notification or have a call incoming on your phone.
 
-To use this you will need to use something like Tasker to send a GET request to the API (See the notification part of the API below) when a notification is received or a call is incoming, relatively simple to setup.
+To use this you will need to use something like Tasker (Android, not sure if possible on IOS) to send a GET request to the API (See the notification part of the API below) when a notification is received or a call is incoming, relatively simple to setup.
 
 ## API
 
