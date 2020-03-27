@@ -109,6 +109,7 @@ void setup()
   server.on("/stopproc", handle_stopproc);
   server.on("/rstfc", handle_rstfc);
   server.on("/capture", handle_capture);
+  server.on("/STPT", handle_STPT);
   server.onNotFound(handle_NotFound);
 
   server.begin();
@@ -182,10 +183,10 @@ void take_photo(){
   if (pictureNumber >= 181) {
     Serial.println("Finished");
     if (WWF){
-    myStepper.setDirection(1); // anti clock-wise
+    myStepper.setDirection(0); // clock-wise
     myStepper.turn();         
     myStepper.stop();
-    delay(15000);
+    delay(5000);
     } else {
       stopProc();
     }
@@ -255,6 +256,15 @@ void handle_rstfc() {
   }
 }
 
+void handle_STPT() {
+  myStepper.setDirection(0); // clock-wise
+  myStepper.step(4.4*stepsScale/noSteps);
+  myStepper.stop();
+  myStepper.step(4.4*stepsScale/noSteps);
+  myStepper.stop();
+  server.send(200, "text/html", "testing stepper");
+}
+
 void handle_capture() {
   ftp.OpenConnection();
   camera_fb_t * fb = NULL;
@@ -302,16 +312,17 @@ String SendHTML(){
    if(ProcRunning) {
   {ptr +="<h2>Process: Running</h2>\n";}
   {ptr +="<button id='stop' type='button' style='width: 100px; height: 50px;'>Stop</button>\n";}
-  {ptr +="<script> document.addEventListener('DOMContentLoaded', function(event) { document.getElementById('stop').addEventListener('click', function(){sendCommand('stopproc');}, false);";}
+  {ptr +="<script> document.addEventListener('DOMContentLoaded', function(event) { document.getElementById('stop').addEventListener('click', function(){sendCommand('stopproc', true);}, false);";}
    } else {
   {ptr +="<h2>Process: Not Running</h2>\n";}
-  {ptr +="<button id='start' type='button' style='width: 100px; height: 50px;'>Start</button><br><br>\n";}
+  {ptr +="<button id='start' type='button' style='width: 100px; height: 50px;'>Start</button><br><br><br>\n";}
   {ptr +="<button id='cap' type='button' >Save test image to FTP</button>\n";}
+  {ptr +="<button id='STPT' type='button' >Test stepper movement</button>\n";}
   {ptr +="<button id='rstfc' type='button' >Reset folder count</button>\n";}
-  {ptr +="<script> document.addEventListener('DOMContentLoaded', function(event) { document.getElementById('start').addEventListener('click', function(){sendCommand('startproc');}, false); document.getElementById('cap').addEventListener('click', function(){sendCommand('capture');}, false); document.getElementById('rstfc').addEventListener('click', function(){sendCommand('rstfc');}, false);";}
+  {ptr +="<script> document.addEventListener('DOMContentLoaded', function(event) { document.getElementById('start').addEventListener('click', function(){sendCommand('startproc', true);}, false); document.getElementById('cap').addEventListener('click', function(){sendCommand('capture');}, false); document.getElementById('STPT').addEventListener('click', function(){sendCommand('STPT');}, false); document.getElementById('rstfc').addEventListener('click', function(){sendCommand('rstfc');}, false);";}
    }
 
-  ptr += "function sendCommand(cmd) { var xhttp = new XMLHttpRequest(); xhttp.onreadystatechange = function() {if (this.readyState == 4 && this.status == 200) {}};xhttp.open('GET', window.location.href + cmd, true);xhttp.send(); setTimeout(function(){ location.reload(); }, 2500); } });</script>";
+  ptr += "function sendCommand(cmd, r) { var xhttp = new XMLHttpRequest(); xhttp.onreadystatechange = function() {if (this.readyState == 4 && this.status == 200) {}};xhttp.open('GET', window.location.href + cmd, true);xhttp.send(); if(r){ setTimeout(function(){ location.reload(); }, 2500);} } }); </script>";
   ptr +="<p>Give it a little while to respond to the command</p>\n";
   ptr +="</body>\n";
   ptr +="</html>\n";
