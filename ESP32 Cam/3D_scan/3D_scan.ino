@@ -26,7 +26,7 @@ WebServer server(80);
 const int rpm = 15; // max rpm on 28BYJ-48 is ~15
 int pinOut[4] = { 2, 14, 15, 13 };
 const int stepsScale = 2400;
-int noSteps=180;
+int noSteps=36;
 // define the number of bytes you want to access
 #define EEPROM_SIZE 1
 Stepper2 myStepper(pinOut);
@@ -180,7 +180,7 @@ bool stopProc()
 
 void take_photo(){
   if (ProcRunning){
-  if (pictureNumber >= 181) {
+  if (pictureNumber > noSteps) {
     Serial.println("Finished");
     if (WWF){
     myStepper.setDirection(0); // clock-wise
