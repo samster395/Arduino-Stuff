@@ -1,1 +1,1 @@
-You will need [my edited IS31FL3731 Library](https://github.com/ToXIc-Dev/Adafruit_IS31FL3731) for this to work.
+This uses a [Scroll pHAT HD](https://shop.pimoroni.com/products/scroll-phat-hd?variant=2380803768330), You will need [my edited IS31FL3731 Library](https://github.com/ToXIc-Dev/Adafruit_IS31FL3731) for this to work.
