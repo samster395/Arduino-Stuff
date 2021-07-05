@@ -9,6 +9,8 @@
 // Type txt + message in a bluetooth serial monitor app to update the display
 // Type br + a number between 0-255 to update the brightness
 
+String Dname = "ESP32 - Badge"; // Bluetooth device name
+
 // Check if Bluetooth configs are enabled
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
@@ -27,7 +29,7 @@ String message2;
 String message3;
 String message4;
 String SerialD;
-bool Swirl = false;
+bool swirl = false;
 bool loopt = false;
 // The lookup table to make the brightness changes be more visible
 uint8_t sweep[] = {10, 20, 30, 40, 60, 80, 100, 150, 200, 255, 255, 200, 150, 100, 80, 60, 40, 30, 20, 10};
@@ -37,12 +39,12 @@ void setup() {
   Wire.begin(13,12);
     if (! matrix.begin()) {
     Serial.println("IS31 not found");
-    while (1);
+    while (1); // loop
   }
   Serial.println("IS31 Found!");
-  // Bluetooth device name
-  SerialBT.begin("ESP32 - Badge");
-  Serial.println("The device started, now you can pair it with bluetooth!");
+  SerialBT.begin(Dname);
+  Serial.print("The device started, now you can pair with bluetooth, Device name: ");
+  Serial.println(Dname);
 }
 
 void loop() {
@@ -55,7 +57,7 @@ void loop() {
       message3 = SerialD;
   }
 
-    if(Swirl) {
+    if(swirl) {
     for (uint8_t incr = 0; incr < 20; incr++)
       for (uint8_t x = 0; x < 17; x++)
         for (uint8_t y = 0; y < 9; y++)
@@ -75,29 +77,22 @@ if (message.indexOf("br") >=0 ) {
  message2 = "";
  Serial.println("Brightness set to: " + b);
  SerialBT.println("Brightness set to: " + b);
- 
-  }  else if (message.indexOf("txt") >=0 ){
-    Swirl = false;
+} else if (message.indexOf("txt") >=0 ){
+    swirl = false;
     message4 = message;
     message4.remove(0,4);
     message4.trim();
     txt = message4;
     Serial.println("Display message set to: " + txt);
     SerialBT.println("Display message set to: " + txt);
-  }
-
-    else if (message.indexOf("swirl") >=0 ){
+} else if (message.indexOf("swirl") >=0 ){
     loopt = false;
-    Swirl = true;
-    Serial.println("Display message set to Swirl");
-    SerialBT.println("Display message set to Swirl");
-  }
-
+    swirl = true;
+    Serial.println("Display set to swirl");
+    SerialBT.println("Display set to swirl");
 }
-
-  if (message2 == txt) {
-    
-  } else {
+}
+  if (message2 == txt) {} else {
   message2 = txt;
   matrix.setRotation(0);
   matrix.setTextSize(0);
@@ -108,8 +103,8 @@ if (message.indexOf("br") >=0 ) {
   if (message2.length() >= 4) {
     loopt = true;
   } else {
-     loopt = false;
-     matrix.print(message2);
+    loopt = false;
+    matrix.print(message2);
   }
   }
 
@@ -122,5 +117,4 @@ if (loopt == true) {
       delay(150);
   }
 }
-
 }
