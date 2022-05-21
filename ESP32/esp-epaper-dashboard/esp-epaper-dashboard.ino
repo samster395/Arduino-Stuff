@@ -165,8 +165,8 @@ void Convert_Readings_to_Imperial() {
 bool DecodeWeather(String json, String Type) {
   const size_t bufferSize = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(21) + 900;
   DynamicJsonDocument doc(32768);                      // allocate the JsonDocument
-  Serial.println();
-  Serial.println(doc.capacity());
+  //Serial.println();
+  //Serial.println(doc.capacity());
   DeserializationError error = deserializeJson(doc, json); // Deserialize the JSON document
   if (error) {                                             // Test if parsing succeeds.
     Serial.print(F("deserializeJson() failed: "));
@@ -300,7 +300,7 @@ String TitleCase(String text) {
 
 void DisplayNews() { 
   newfont = OpenSans18B;
-  int y = 220;
+  int y = 200;
   drawString(10, y, "Headlines", LEFT);
 
   HTTPClient http;
@@ -317,7 +317,7 @@ void DisplayNews() {
     }
     // convert it to a JsonObject
     JsonObject root = doc.as<JsonObject>();
-    int NumberOfTimes = 4;
+    int NumberOfTimes = 6;
     for (int i=0; i < NumberOfTimes; i++)
     {
       String Title = doc["articles"][i]["title"];
@@ -340,7 +340,10 @@ void DisplayNews() {
   http.end();
 }
 
-void DisplayQuote() { 
+void DisplayQuote() {
+  //newfont = OpenSans18B;
+  //drawString(10, 460, "Quote", LEFT);
+
   HTTPClient http;
   http.begin("http://api.quotable.io/random?maxLength=75"); //http.begin(uri,test_root_ca); //HTTPS example connection
   //http.addHeader("accept", "application/json");
@@ -360,7 +363,7 @@ void DisplayQuote() {
     String QLength = doc["length"];
     if(debug){Serial.println(Quote);}
     newfont = OpenSans12B;
-    drawString(10, 480, Quote, LEFT);
+    drawString(10, 500, Quote, LEFT);
   }
   else
   {
@@ -381,8 +384,7 @@ void DisplayGeneralInfoSection() {
   drawString(5, 2, City, LEFT);
   //drawString(5, 2, "hello", LEFT);
   newfont = OpenSans8B;
-  Serial.println(Date_str);
-  //drawString(500, 2, Date_str + "  @   " + Time_str, RIGHT;
+  drawString(800, 40, "Updated: " + Time_str, LEFT);
   newfont = OpenSans18B;
   drawString(350, 2, Date_str, LEFT);
 }
@@ -603,7 +605,7 @@ void DrawBattery(int x, int y) {
 }
 boolean UpdateLocalTime() {
   struct tm timeinfo;
-  char   time_output[3], day_output[50], update_time[30];
+  char   time_output[50], day_output[50], update_time[30];
   while (!getLocalTime(&timeinfo, 5)) {
     Serial.println("Failed to obtain time");
     return false;
@@ -612,20 +614,21 @@ boolean UpdateLocalTime() {
   CurrentMin  = timeinfo.tm_min;
   CurrentSec  = timeinfo.tm_sec;
   Serial.println(&timeinfo, "%a %b %d %Y   %H:%M:%S");
-  if (Units == "M") {
+  //if (Units == "M") {
     //sprintf(day_output, "%s, %02u %s %04u", weekday_D[timeinfo.tm_wday], timeinfo.tm_mday, month_M[timeinfo.tm_mon], (timeinfo.tm_year) + 19 * 100);
     strftime(day_output, sizeof(day_output), "%a %b %d %Y", &timeinfo);
-    strftime(time_output, sizeof(time_output), "%H:%M:%S", &timeinfo); 
+    strftime(time_output, sizeof(time_output), "%H:%M", &timeinfo); 
     //sprintf(time_output, "%s", update_time);
-  }
-  else
-  {
-    strftime(day_output, sizeof(day_output), "%a %b-%d-%Y", &timeinfo);
-    strftime(update_time, sizeof(update_time), "%r", &timeinfo);
-    sprintf(time_output, "%s", update_time);
-  }
+  //}
+  //else
+  //{
+  //  strftime(day_output, sizeof(day_output), "%a %b-%d-%Y", &timeinfo);
+  //  strftime(update_time, sizeof(update_time), "%r", &timeinfo);
+  //  sprintf(time_output, "%s", update_time);
+  //}
   Date_str = day_output;
   Time_str = time_output;
+  //Serial.println("Time: " + Time_str);
   return true;
 }
 
