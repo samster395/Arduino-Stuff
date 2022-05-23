@@ -75,19 +75,18 @@ long Delta           = 30; // ESP32 rtc speed compensation, prevents display at 
 WiFiManager wifiManager;
 GFXfont  newfont;
 uint8_t *B;
-#define uS_TO_S_FACTOR 1000000  /* Conversion factor for micro seconds to seconds */
-#define TIME_TO_SLEEP  3600     /* Time ESP32 will go to sleep (in seconds) - 60 mins */
+int uS_TO_S_FACTOR = 1000000;  /* Conversion factor for micro seconds to seconds */
+int TIME_TO_SLEEP = 3600;     /* Time ESP32 will go to sleep (in seconds) - 60 mins */
 
 void BeginSleep() {
   epd_poweroff_all();
   UpdateLocalTime();
-  //SleepTimer = (SleepDuration * 60 - ((CurrentMin % SleepDuration) * 60 + CurrentSec)) + Delta; 
-  //esp_sleep_enable_timer_wakeup(SleepTimer * 10000000LL); 
+  if(debug){TIME_TO_SLEEP = 60;}
   Serial.println("Awake for : " + String((millis() - StartTime) / 1000.0, 3) + "-secs");
   Serial.println("Entering " + String(TIME_TO_SLEEP) + " (secs) of sleep time");
   Serial.println("Starting deep-sleep period...");
-  //esp_deep_sleep_start(); 
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  esp_deep_sleep_start();
 }
 boolean SetupTime() {
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); 
