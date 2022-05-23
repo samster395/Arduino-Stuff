@@ -77,6 +77,7 @@ GFXfont  newfont;
 uint8_t *B;
 int uS_TO_S_FACTOR = 1000000;  /* Conversion factor for micro seconds to seconds */
 int TIME_TO_SLEEP = 3600;     /* Time ESP32 will go to sleep (in seconds) - 60 mins */
+//int TIME_TO_SLEEP = 60;     /* Time ESP32 will go to sleep (in seconds) */
 
 void BeginSleep() {
   epd_poweroff_all();
@@ -85,7 +86,8 @@ void BeginSleep() {
   Serial.println("Awake for : " + String((millis() - StartTime) / 1000.0, 3) + "-secs");
   Serial.println("Entering " + String(TIME_TO_SLEEP) + " (secs) of sleep time");
   Serial.println("Starting deep-sleep period...");
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  uint64_t u64SleepLength = TIME_TO_SLEEP * 1000000UL;
+  esp_sleep_enable_timer_wakeup(u64SleepLength);
   esp_deep_sleep_start();
 }
 boolean SetupTime() {
@@ -121,6 +123,7 @@ void InitialiseSystem() {
 }
 void loop() {}
 void setup() {
+  delay(500);
   InitialiseSystem();
   if (StartWiFi() == WL_CONNECTED && SetupTime() == true) {
     bool WakeUp = false;
@@ -464,6 +467,7 @@ void Display_UVIndexLevel(int x, int y, float UVI) {
   if (UVI >= 6 && UVI <= 7){  Level = " (H)";}
   if (UVI >= 8 && UVI <= 10){ Level = " (VH)";}
   if (UVI >= 11){             Level = " (EX)";}
+  Serial.println("UVI Level:" + Level);
   drawString(x + 20, y - 5, String(UVI, (UVI < 0 ? 1 : 0)) + Level, LEFT);
   DrawUVI(x - 10, y - 5);
 }
