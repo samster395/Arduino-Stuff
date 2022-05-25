@@ -321,10 +321,11 @@ void DisplayNews() {
     JsonObject root = doc.as<JsonObject>();
     int NumberOfTimes = 6;
     for (int i=0; i < NumberOfTimes; i++)
-    {
+    {      
       String Title = doc["articles"][i]["title"];
+      if(Title.length() > 20) {
       if(debug){Serial.println(Title);}
-      Title.remove(Title.indexOf("-"));
+      Title.remove(Title.lastIndexOf("-"));
       if(Title.length() > 84) {
         Title.remove(84);
         Title += "...";
@@ -332,6 +333,7 @@ void DisplayNews() {
       y = y + 40;
       newfont = OpenSans10B;
       drawString(10, y, Title, LEFT);
+      }
     }
   }
   else
