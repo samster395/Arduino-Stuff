@@ -58,7 +58,7 @@ float humidity_readings[max_readings]    = {0};
 float rain_readings[max_readings]        = {0};
 float snow_readings[max_readings]        = {0};
 long SleepDuration   = 60; // Sleep time in minutes, aligned to the nearest minute boundary, so if 30 will always update at 00 or 30 past the hour
-int  WakeupHour      = 8;  // Wakeup after 07:00 to save battery power
+int  WakeupHour      = 5;  // Wakeup after 07:00 to save battery power
 int  SleepHour       = 23; // Sleep  after 23:00 to save battery power
 long StartTime       = 0;
 long SleepTimer      = 0;
@@ -131,7 +131,11 @@ void setup() {
       WakeUp = (CurrentHour >= WakeupHour || CurrentHour <= SleepHour);
     else
       WakeUp = (CurrentHour >= WakeupHour && CurrentHour <= SleepHour);
-    WakeUp = true; // delete unless debugging
+    if (WakeUp)
+      Serial.println("Wakeup: true");
+    else
+      Serial.println("Wakeup: False");
+    //WakeUp = true; // delete unless debugging
     if (WakeUp) {
       byte Attempts = 1;
       bool RxWeather  = false;
@@ -154,6 +158,16 @@ void setup() {
         epd_poweroff_all(); // Switch off all power to EPD
       }
     } else {
+      if (PowerSource == "USB") { // This will cause battery drain so it only does this when configed to use USB power
+      epd_poweron();
+      epd_clear();
+      StopWiFi();
+      newfont = OpenSans24B;
+      int y = 200;
+      drawString(100, y, "Sleep Hours Active", LEFT);
+      epd_draw_grayscale_image(epd_full_screen(), B);
+      epd_poweroff_all(); // Switch off all power to EPD
+      }
       Serial.println("Sleep Hours Active");
     }
   }
@@ -613,6 +627,8 @@ boolean UpdateLocalTime() {
   char   time_output[50], day_output[50], update_time[30];
   while (!getLocalTime(&timeinfo, 5)) {
     Serial.println("Failed to obtain time");
+    delay(2000);
+    ESP.restart();
     return false;
   }
   CurrentHour = timeinfo.tm_hour;
