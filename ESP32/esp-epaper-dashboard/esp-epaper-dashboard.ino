@@ -490,7 +490,7 @@ void Display_UVIndexLevel(int x, int y, float UVI) {
   if (UVI >= 8 && UVI <= 10){ Level = " (VH)";}
   if (UVI >= 11){             Level = " (EX)";}
   Serial.println("UVI Level: " + Level);
-  drawString(x + 20, y - 5, String(UVI, (UVI < 0 ? 1 : 0)) + Level, LEFT);
+  drawString(x, y - 5, "UV Index: " + String(UVI, (UVI < 0 ? 1 : 0)) + Level, LEFT);
 }
 void DrawSegment(int x, int y, int o1, int o2, int o3, int o4, int o11, int o12, int o13, int o14) {
   epd_draw_line(x + o1,  y - o2,  x + o3,  y - o4,  Black, B);
