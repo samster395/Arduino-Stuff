@@ -67,10 +67,6 @@ long Delta           = 30; // ESP32 rtc speed compensation, prevents display at 
 #include "opensans12b.h"
 #include "opensans18b.h"
 #include "opensans24b.h"
-#include "moon.h"
-#include "sunrise.h"
-#include "sunset.h"
-#include "uvi.h"
 WiFiManager wifiManager;
 GFXfont  newfont;
 uint8_t *B;
@@ -493,85 +489,8 @@ void Display_UVIndexLevel(int x, int y, float UVI) {
   if (UVI >= 6 && UVI <= 7){  Level = " (H)";}
   if (UVI >= 8 && UVI <= 10){ Level = " (VH)";}
   if (UVI >= 11){             Level = " (EX)";}
-  Serial.println("UVI Level:" + Level);
+  Serial.println("UVI Level: " + Level);
   drawString(x + 20, y - 5, String(UVI, (UVI < 0 ? 1 : 0)) + Level, LEFT);
-  DrawUVI(x - 10, y - 5);
-}
-float NormalizedMoonPhase(int d, int m, int y) {
-  int j = JulianDate(d, m, y);
-  double Phase = (j + 4.867) / 29.53059;
-  return (Phase - (int) Phase);
-}
-void DisplayAstronomySection(int x, int y) {
-  newfont = OpenSans10B;
-  time_t now = time(NULL);
-  struct tm * now_utc  = gmtime(&now);
-  drawString(x + 5, y + 102, MoonPhase(now_utc->tm_mday, now_utc->tm_mon + 1, now_utc->tm_year + 1900, Hemisphere), LEFT);
-  DrawMoonImage(x + 10, y + 23);
-  DrawMoon(x + 28, y + 15, 75, now_utc->tm_mday, now_utc->tm_mon + 1, now_utc->tm_year + 1900, Hemisphere); 
-  drawString(x - 115, y - 40, ConvertUnixTime(WxConditions[0].Sunrise).substring(0, 5), LEFT);
-  drawString(x - 115, y - 80, ConvertUnixTime(WxConditions[0].Sunset).substring(0, 5), LEFT);
-  DrawSunriseImage(x - 180, y - 20);
-  DrawSunsetImage(x - 180, y - 60);
-}
-void DrawMoon(int x, int y, int diameter, int dd, int mm, int yy, String hemisphere) {
-  double Phase = NormalizedMoonPhase(dd, mm, yy);
-  hemisphere.toLowerCase();
-  if (hemisphere == "north") Phase = 1 - Phase;
-  epd_fill_circle(x + diameter + 1, y + diameter, diameter / 2 + 1, DarkGrey, B);
-  const int number_of_lines = 900;
-  for (double Ypos = 0; Ypos <= number_of_lines / 2; Ypos++) {
-    double Xpos = sqrt(number_of_lines / 2 * number_of_lines / 2 - Ypos * Ypos);
-    double Rpos = 2 * Xpos;
-    double Xpos1, Xpos2;
-    if (Phase < 0.5) {
-      Xpos1 = Xpos;
-      Xpos2 = Rpos + 2 * Phase * Rpos - Xpos;
-    }
-    else {
-      Xpos1 = Xpos;
-      Xpos2 = Xpos + 2 * Phase * Rpos + Rpos;
-    }
-    double pW1x = (Xpos1 - number_of_lines) / number_of_lines * diameter + x;
-    double pW1y = (number_of_lines + Ypos)  / number_of_lines * diameter + y;
-    double pW2x = (Xpos2 - number_of_lines) / number_of_lines * diameter + x;
-    double pW2y = (number_of_lines + Ypos)  / number_of_lines * diameter + y;
-    double pW3x = (Xpos1 - number_of_lines) / number_of_lines * diameter + x;
-    double pW3y = (Ypos - number_of_lines)  / number_of_lines * diameter + y;
-    double pW4x = (Xpos2 - number_of_lines) / number_of_lines * diameter + x;
-    double pW4y = (Ypos - number_of_lines)  / number_of_lines * diameter + y;
-    epd_draw_line(pW1x, pW1y, pW2x, pW2y, White, B);
-    epd_draw_line(pW3x, pW3y, pW4x, pW4y, White, B);
-  }
-  epd_draw_circle(x + diameter + 1, y + diameter, diameter / 2, Black, B);
-}
-String MoonPhase(int d, int m, int y, String hemisphere) {
-  int c, e;
-  double jd;
-  int b;
-  if (m < 3) {
-    y++;
-    m += 12;
-  }
-  ++m;
-  c   = 365.25 * y;
-  e   = 30.6  * m;
-  jd  = c + e + d + 694039.09; 
-  jd /= 29.53059; 
-  b   = jd;
-  jd  = b;   
-  b   = jd * 8 + 0.5;
-  b   = b & 7;
-  if (hemisphere == "south") b = 7 - b;
-  if (b == 0) return TXT_MOON_NEW;
-  if (b == 1) return TXT_MOON_WAXING_CRESCENT;
-  if (b == 2) return TXT_MOON_FIRST_QUARTER; 
-  if (b == 3) return TXT_MOON_WAXING_GIBBOUS;
-  if (b == 4) return TXT_MOON_FULL;
-  if (b == 5) return TXT_MOON_WANING_GIBBOUS; 
-  if (b == 6) return TXT_MOON_THIRD_QUARTER;
-  if (b == 7) return TXT_MOON_WANING_CRESCENT;
-  return "";
 }
 void DrawSegment(int x, int y, int o1, int o2, int o3, int o4, int o11, int o12, int o13, int o14) {
   epd_draw_line(x + o1,  y - o2,  x + o3,  y - o4,  Black, B);
@@ -679,39 +598,9 @@ void Visibility(int x, int y, String Visibility) {
   epd_fill_circle(x, y + Offset, r / 4, Black, B);
 }
 
-void addmoon(int x, int y, bool IconSize) {
-  int xOffset = 65;
-  int yOffset = 12;
-  if (IconSize == LargeIcon) {
-    xOffset = 130;
-    yOffset = -40;
-  }
-  epd_fill_circle(x - 16 + xOffset, y - 37 + yOffset, uint16_t(Small * 1.6), White, B);
-  epd_fill_circle(x - 28 + xOffset, y - 37 + yOffset, uint16_t(Small * 1.0), Black, B);
-}
-
 void Nodata(int x, int y, bool IconSize, String IconName) {
   if (IconSize == LargeIcon) newfont = OpenSans24B; else newfont = OpenSans12B;
   drawString(x - 3, y - 10, "?", CENTER);
-}
-
-void DrawMoonImage(int x, int y) {
-  Rect_t area = {.x = x, .y = y, .width  = moon_width, .height =  moon_height };
-  epd_draw_grayscale_image(area, (uint8_t *) moon_data);
-}
-
-void DrawSunriseImage(int x, int y) {
-  Rect_t area = {.x = x, .y = y, .width  = sunrise_width, .height =  sunrise_height};
-  epd_draw_grayscale_image(area, (uint8_t *) sunrise_data);
-}
-
-void DrawSunsetImage(int x, int y) {
-  Rect_t area = {.x = x, .y = y, .width  = sunset_width, .height =  sunset_height};
-  epd_draw_grayscale_image(area, (uint8_t *) sunset_data);
-}
-
-void DrawUVI(int x, int y) {Rect_t area = {.x = x, .y = y, .width  = uvi_width, .height = uvi_height};
-  epd_draw_grayscale_image(area, (uint8_t *) uvi_data);
 }
 
 void drawString(int x, int y, String text, alignment align) {
