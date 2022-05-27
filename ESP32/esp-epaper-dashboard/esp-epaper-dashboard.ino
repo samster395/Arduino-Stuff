@@ -158,13 +158,13 @@ void setup() {
         epd_poweroff_all(); // Switch off all power to EPD
       }
     } else {
-      if (PowerSource == "USB") { // This will cause battery drain so it only does this when configed to use USB power
+      if (CurrentHour == SleepHour) {
       epd_poweron();
       epd_clear();
       StopWiFi();
       newfont = OpenSans24B;
       int y = 200;
-      drawString(100, y, "Sleep Hours Active", LEFT);
+      drawString(200, y, "Sleep Hours Active", LEFT);
       epd_draw_grayscale_image(epd_full_screen(), B);
       epd_poweroff_all(); // Switch off all power to EPD
       }
