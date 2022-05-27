@@ -1,6 +1,6 @@
 # esp-epaper-dashboard
 
-**Work In progress, not 100% but working well enough for now**
+**Work In progress, not 100% but working well enough for now, sometimes I break stuff**
 
 Heavily edited from the weather example here: https://github.com/Xinyuan-LilyGO/LilyGo-EPD47
 

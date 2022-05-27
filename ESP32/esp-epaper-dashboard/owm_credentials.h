@@ -12,8 +12,9 @@ String Longitude        = "";
 String Language         = "EN";                        
 String Hemisphere       = "north";                        
 String Units            = "M";
-String PowerSource      = "Battery"; // Set long term power source, decides whether to show batery level (Valid options: Battery, USB)                 
-const char* Timezone    = "GMT0BST,M3.5.0/01,M10.5.0/02";  
+String PowerSource      = "Battery"; // Set long term power source, decides whether to show batery level and whether to refresh display at night (Valid options: Battery, USB)
+int  WakeupHour      = 5;  // Wakeup after to save battery power
+int  SleepHour       = 23; // Sleep  after to save battery power const char* Timezone    = "GMT0BST,M3.5.0/01,M10.5.0/02";  
 const char* ntpServer   = "uk.pool.ntp.org";
 int   gmtOffset_sec     = 0;
 int   daylightOffset_sec = 3600;
