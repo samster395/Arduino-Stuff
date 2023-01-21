@@ -51,7 +51,8 @@ bool appendFile(const char *path, const unsigned char *data, unsigned long len)
 
 bool initFileSystem()
 {
-	if (!SD_MMC.begin())
+	//if (!SD_MMC.begin())
+  if (!SD_MMC.begin("/sdcard", true)) // this method stops the flash going off
 	{
 		Serial.println("Card Mount Failed");
 		return false;

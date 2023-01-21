@@ -59,7 +59,7 @@ bool initCamera()
 		s->set_saturation(s, -2); //lower the saturation
 	}
 	//drop down frame size for higher initial frame rate
-	s->set_framesize(s, FRAMESIZE_QVGA);
+	//s->set_framesize(s, FRAMESIZE_QVGA); // disabled as it lowers frame rate on boot
 
 #if defined(CAMERA_MODEL_M5STACK_WIDE)
 	s->set_vflip(s, 1);

@@ -28,6 +28,8 @@ void setup()
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
+  delay(1000);
+  startLapse(); // start taking photos on boot
 }
 
 void loop()
