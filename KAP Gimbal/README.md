@@ -1,1 +1,1 @@
-# More info [here](https://toxic-dev.github.io/Kite-Aerial-Photography/)
+# More info [here](https://samster395.github.io/Kite-Aerial-Photography/)
