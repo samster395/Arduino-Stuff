@@ -5,7 +5,7 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 <!-- 
 This HTML file is used to edit the web interface locally,
 I use VS Code to run a live server and edit it,
-it supports connecting to external IPs using the ?ip= URL parameter otherwise it uses localhost.
+it supports connecting to external IPs using the ?ip=192-168-0-52 (Dashes instead of full stops) URL parameter otherwise it uses localhost.
 Code here is mirrored in the HTML.ino file that gets uploaded to the ESP32.
 -->
 <html>
@@ -82,6 +82,10 @@ Code here is mirrored in the HTML.ino file that gets uploaded to the ESP32.
       cursor: pointer;
     }
 
+    input[type=button]{
+      margin-top: 5px;
+    }
+
     </style>
   
   </head>
@@ -152,14 +156,15 @@ Code here is mirrored in the HTML.ino file that gets uploaded to the ESP32.
 
     </table>
     <br>
+    Lights<br><br><input type="button" onclick="Lights(false, true)" value="Toggle"></input> <br> <input type="button" onclick="FlashLights();" value="Toggle Flashing Lights"></input><br><br>
+    <input type="color" value="#ffffff" id="color-picker" onchange="Lights();"/><br><br><div style="width:250px;margin: auto;">Brightness: <br><br> <input type="range" min="0" max="255" value="255" class="slider" id="LiBri" oninput="Lights(this.value);"></div><br><br>
     <button onclick="toggle('editor')">Toggle Editor</button><br>
-    
 
     <div style="display:block;" id="editor">
       <h2>Editor</h2>
       <input type="button" onclick="FramesPlay()" value="Play Saved Frames"> </input>
       <input type="button" onclick="FramesStop()" value="Stop Playing"> </input><br><br>
-      Animation Speed (In ms): <input id="framespeed" name="frspeed" type="number" value="350" size="4"> | Loop:
+      Time between frames (In ms): <input id="framespeed" name="frspeed" type="number" value="0" size="4"> | Loop:
       <input type="checkbox" id="floop"> | 
       Selected Sequence: <select id="seqdrop" onchange="FramesShow(this.selectedOptions[0].text);SeqEdit();"></select><br><br>
       <!-- Selected Sequence:<input id="seqdrop" name="frame" type="number" value="1" size="4"> <input type="button" id="b2" onclick="SeqLoad()" value="Load Sequence"> </input><br><br>-->
@@ -230,8 +235,13 @@ Code here is mirrored in the HTML.ino file that gets uploaded to the ESP32.
       function sendButtonInput(key, value) 
       {
       if(websocketCarInput.readyState == websocketCarInput.OPEN){
-       var data = key + "," + value;
+        if(value){
+          var data = key + "," + value;
+        }else{
+          var data = key;
+        }
        websocketCarInput.send(data);
+       //console.log("sendButtonInput: " + data);
       }
       }
       function handleKeyDown(event) {
@@ -244,11 +254,11 @@ Code here is mirrored in the HTML.ino file that gets uploaded to the ESP32.
         }
         if (event.keyCode ===37) // Left Arrow
         {
-          sendButtonInput("LXY, 100, 5");
+          sendButtonInput("LXY, -100, 5");
         }
         if (event.keyCode ===39) // Right Arrow
         {
-          sendButtonInput("LXY, -100, 5");
+          sendButtonInput("LXY, 100, 5");
         }
         if (event.keyCode === 87) // W
         {
@@ -289,7 +299,7 @@ Code here is mirrored in the HTML.ino file that gets uploaded to the ESP32.
         }
       function handleKeyUp(event) {
         if (event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40 || event.keyCode === 87 || event.keyCode === 83) {
-            console.log("key up");
+            //console.log("key up");
             sendButtonInput("LXY, 0, 0");
             sendButtonInput("RXY, 0, 0");
         }
@@ -361,7 +371,71 @@ setInterval(function(){
   Joy3oldX = Joy3.GetX();
   Joy3oldY = Joy3.GetY();
 }, 50);
-       
+
+var lights = true;
+
+let counter = 0;
+let timeout;
+let timer_on = 0;
+
+function timedCount() {
+  timeout = setInterval(function(){  Lights(false, true); }, 500);
+  console.log("start flash");
+}
+
+function startCount() {
+  if (!timer_on) {
+    timer_on = 1;
+    timedCount();
+  }
+}
+
+function stopCount() {
+  clearTimeout(timeout);
+  console.log("stop flash");
+  Lights(255);
+  timer_on = 0;
+}
+
+function FlashLights(){
+  if(!timer_on){
+    startCount();
+  } else {
+    stopCount();
+  }
+}
+
+function Lights(bri, tog){
+  const color = document.getElementById("color-picker").value;
+  var r = parseInt(color.substr(1, 2), 16)
+  var g = parseInt(color.substr(3, 2), 16)
+  var b = parseInt(color.substr(5, 2), 16)
+  var Brightness = 255;
+  if(bri){
+    Brightness = bri;
+  }
+  if(tog){
+    if(lights){
+      sendButtonInput("Light, 0, 0, 0, 0, 255");
+      lights = false;
+    } else {
+      sendButtonInput('Light, '+ r + ', '+ g + ', '+ b + ', 0, ' + Brightness);
+      lights = true;
+    }
+  } else {
+  //const color = document.getElementById("color-picker").value;
+  //var r = parseInt(color.substr(1, 2), 16)
+  //var g = parseInt(color.substr(3, 2), 16)
+  //var b = parseInt(color.substr(5, 2), 16)
+  //var Brightness = 255;
+  //if(bri){
+  //  Brightness = bri;
+  //}
+  //console.log(Brightness);
+  sendButtonInput('Light, '+ r + ', '+ g + ', '+ b + ', 0, ' + Brightness);
+  console.log('Light, '+ r + ', '+ g + ', '+ b + ', 0, ' + Brightness);
+  }
+}
 
 var FrameNum = 0
 var FrameArr = [0];
@@ -458,7 +532,7 @@ async function FramesPlay() {
         setTimeout(function () {
           //console.log(loadedSeqAr[i]);
 
-          console.log("CMD: " + cmd + " - Run time(s): " + Rtime);
+          console.log("CMD: " + cmd + " - Run time(ms): " + Rtime);
           //if(Rtime <= 0){ Rtime = 1; }
           //for (let i = 0; i < Rtime; i++) {
           sendButtonInput(cmd);
@@ -471,15 +545,16 @@ async function FramesPlay() {
         }, framespeed * i);
 
         await sleep(Rtime);
-        sendButtonInput("LXY, 0, 0");
-        sendButtonInput("RXY, 0, 0");
+          sendButtonInput("LXY, 0, 0");
+          sendButtonInput("RXY, 0, 0");
+          console.log("Stopping Motion");
 
       }
 
 
       
       if (floop.checked) {
-          FTimeout2 = setTimeout(FramesPlay, 2000);
+          FTimeout2 = setTimeout(FramesPlay, 500);
       }
 
   }
@@ -627,6 +702,12 @@ function toggle(divID) {
     x.style.display = "none";
   }
 } 
+
+window.addEventListener("keydown", function(e) {
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);
 
     </script>
   </body>    

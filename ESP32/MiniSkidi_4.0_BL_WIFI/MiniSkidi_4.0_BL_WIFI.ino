@@ -9,6 +9,7 @@
 #include <ElegantOTA.h>
 #include <iostream>
 #include <sstream>
+#include <Adafruit_NeoPixel.h>
 
 //#include <Battery.h>
 
@@ -16,9 +17,16 @@
 
 bool batteryMonitoring = true; // Uses a 22k and 10k resistor voltage divider connected to GPIO 36/VP pin to bring the battery pack voltage(8.4v fully charged) below 3.3v for the ESP's ADC pins.
 bool UseWifiManager = true; // You can either use WiFiManager - https://github.com/tzapu/WiFiManager or set this to false and input ssid and pass below
+// If its not moving the right way you can change these to fix it rather than rewiring
+bool leftMotorswap = false; 
+bool rightMotorswap = true;
 
 const char* ssid = "";
 const char* password = "";
+
+#define PIN 1
+#define LED_COUNT 2
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(LED_COUNT, PIN, NEO_GRBW + NEO_KHZ800); // sk6812 
 
 WiFiManager wifiManager;
 
@@ -193,12 +201,10 @@ void processGamepad(ControllerPtr ctl) {
 
   if (ctl->thumbR()) {
     if (!auxLightsOn) {
-      digitalWrite(auxLights0, HIGH);
-      digitalWrite(auxLights1, HIGH);
+      colorSet(strip.Color(255, 255, 255, 0), 255); 
       auxLightsOn = true;
     } else {
-      digitalWrite(auxLights0, LOW);
-      digitalWrite(auxLights1, LOW);
+      colorSet(strip.Color(0, 0, 0, 0), 255); 
       auxLightsOn = false;
     }
   }
@@ -246,6 +252,14 @@ void notifyClientsBattery() {
   //Serial.println((analogRead(36) / 4095) * 3.3 * 3.2);
 }
 
+void colorSet(uint32_t c, uint8_t brightness) { // From NeoPixel Library
+  for(uint16_t i=0; i<strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+  }
+  strip.setBrightness(brightness);
+  strip.show();
+}
+
 void onCarInputWebSocketEvent(AsyncWebSocket *server,
                               AsyncWebSocketClient *client,
                               AwsEventType type,
@@ -270,14 +284,20 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server,
         std::string myData = "";
         myData.assign((char *)data, len);
         std::istringstream ss(myData);
-        std::string key, value, value2;
+        std::string key, value, value2, value3, value4, value5;
         std::getline(ss, key, ',');
         std::getline(ss, value, ',');
         std::getline(ss, value2, ',');
+        std::getline(ss, value3, ',');
+        std::getline(ss, value4, ',');
+        std::getline(ss, value5, ',');
         //Serial.printf("Key [%s] Value[%s]\n", key.c_str(), value.c_str());
         Serial.printf("Key [%s] Value[%s] Value2[%s]\n", key.c_str(), value.c_str(), value2.c_str());
         int valueInt = atoi(value.c_str());
         int valueInt2 = atoi(value2.c_str());
+        int valueInt3 = atoi(value3.c_str());
+        int valueInt4 = atoi(value4.c_str());
+        int valueInt5 = atoi(value5.c_str());
         if (key == "MoveCar")
         {
           //moveCar(valueInt);
@@ -334,9 +354,8 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server,
         }
         else if (key == "Light")
         {
-          //lightControl();
-           Serial.print("light");
-        
+          colorSet(strip.Color(valueInt, valueInt2, valueInt3, valueInt4), valueInt5); 
+          Serial.printf("Light - R:[%s] G:[%s] B:[%s] W:[%s] Bri:[%s]\n", value.c_str(), value2.c_str(), value3.c_str(), value4.c_str(), value5.c_str());
         }
         else if (key == "Wiggle")
         {
@@ -371,6 +390,10 @@ void setup() {
   const uint8_t* addr = BP32.localBdAddress();
   Serial.printf("BD Addr: %2X:%2X:%2X:%2X:%2X:%2X\n", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
 
+  strip.begin();
+  colorSet(strip.Color(255, 255, 255, 0), 0); // Cold WHITE
+  strip.show(); // Initialize all pixels to Cold WHITE
+
   BP32.setup(&onConnectedController, &onDisconnectedController);
   BP32.forgetBluetoothKeys();
   BP32.enableVirtualDevice(false);
@@ -379,10 +402,10 @@ void setup() {
 
   rightMotor.init(rightMotor0, rightMotor1, 5);
   rightMotor.setDecayMode(drv8833DecaySlow);
-  rightMotor.swapDirection(false);
+  rightMotor.swapDirection(rightMotorswap);
   leftMotor.init(leftMotor0, leftMotor1, 6);
   leftMotor.setDecayMode(drv8833DecaySlow);
-  leftMotor.swapDirection(true);
+  leftMotor.swapDirection(leftMotorswap);
   armMotor.init(armMotor0, armMotor1, 7);
   armMotor.setDecayMode(drv8833DecaySlow);
 
