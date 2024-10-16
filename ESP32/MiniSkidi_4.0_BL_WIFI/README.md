@@ -1,7 +1,7 @@
 # MiniSkidi_4.0_BL_WIFI
 Edited from this https://github.com/Le0Michine/MiniSkidi-V4
 
-Has Support for a web interface and a bluetooth controller, web interface has been heavily edited including support for battery monitoring and movement sequences.
+Has Support for a web interface and a bluetooth controller, web interface has been heavily edited including support for battery monitoring(based on two 16340 batteries in series) and movement sequences.
 
 Some cleanup might be needed but it works for now.
 
