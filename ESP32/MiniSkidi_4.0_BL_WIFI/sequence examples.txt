@@ -1,0 +1,5 @@
+{"name":"Wiggle","frames":[{"cmd":"Wiggle","rtime":"10"}]}
+
+{ "name": "Forward and turn", "frames": [  {   "cmd": "LXY, 5, 100",   "rtime": "4"  },  {   "cmd": "LXY, 100, 5",   "rtime": "1.5"  },  {   "cmd": "LXY, 5, 100",   "rtime": "4"  } ]}
+
+{ "name": "Claw Open/Close", "frames": [  {   "cmd": "AUX, 10",   "rtime": "1"  },  {   "cmd": "AUX, 180",   "rtime": "1"  } ]}

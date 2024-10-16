@@ -1,0 +1,634 @@
+// This file contains the HTML data for the MiniSkidi Project
+
+const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
+<!DOCTYPE html>
+<!-- 
+This HTML file is used to edit the web interface locally,
+I use VS Code to run a live server and edit it,
+it supports connecting to external IPs using the ?ip= URL parameter otherwise it uses localhost.
+Code here is mirrored in the HTML.ino file that gets uploaded to the ESP32.
+-->
+<html>
+  <head>
+  <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1, user-scalable=no">
+  <title>MiniSkidi Control</title>
+  <!--<script src="joy.min.js"></script>-->
+  <link rel="shortcut icon" href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIiA/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgd2lkdGg9IjEwODAiIGhlaWdodD0iMTA4MCIgdmlld0JveD0iMCAwIDEwODAgMTA4MCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxkZXNjPkNyZWF0ZWQgd2l0aCBGYWJyaWMuanMgNS4yLjQ8L2Rlc2M+CjxkZWZzPgo8L2RlZnM+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+CjxnIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgNTQwIDU0MCkiIGlkPSJkODFiNDVkMy0wNDQ2LTRmNDgtYWQwMy0xOTkwNDAwNTlhOGIiICA+CjwvZz4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSA1NDAgNTQwKSIgaWQ9IjBiOTNlZjQyLWEzZDgtNGIzNy04OWQ5LWY1MTVmYWY4OTA0ZCIgID4KPHJlY3Qgc3R5bGU9InN0cm9rZTogbm9uZTsgc3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiBub25lOyBzdHJva2UtbGluZWNhcDogYnV0dDsgc3Ryb2tlLWRhc2hvZmZzZXQ6IDA7IHN0cm9rZS1saW5lam9pbjogbWl0ZXI7IHN0cm9rZS1taXRlcmxpbWl0OiA0OyBmaWxsOiByZ2IoMjU1LDI1NSwyNTUpOyBmaWxsLXJ1bGU6IG5vbnplcm87IG9wYWNpdHk6IDE7IHZpc2liaWxpdHk6IGhpZGRlbjsiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgIHg9Ii01NDAiIHk9Ii01NDAiIHJ4PSIwIiByeT0iMCIgd2lkdGg9IjEwODAiIGhlaWdodD0iMTA4MCIgLz4KPC9nPgo8ZyB0cmFuc2Zvcm09Im1hdHJpeCgxNS4wOSAwIDAgMTUuMDkgNTQwLjQ3IDUzOS40KSIgaWQ9ImVjZTIwYmU1LTZlMGMtNGM1MS1iZjg4LTM1MzM2ZjQ2NzI0ZSIgID4KPGNpcmNsZSBzdHlsZT0ic3Ryb2tlOiByZ2IoMCwwLDApOyBzdHJva2Utd2lkdGg6IDA7IHN0cm9rZS1kYXNoYXJyYXk6IG5vbmU7IHN0cm9rZS1saW5lY2FwOiBidXR0OyBzdHJva2UtZGFzaG9mZnNldDogMDsgc3Ryb2tlLWxpbmVqb2luOiBtaXRlcjsgc3Ryb2tlLW1pdGVybGltaXQ6IDQ7IGZpbGw6IHJnYigyNTUsMjU1LDI1NSk7IGZpbGwtcnVsZTogbm9uemVybzsgb3BhY2l0eTogMTsiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgIGN4PSIwIiBjeT0iMCIgcj0iMzUiIC8+CjwvZz4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoMS4xNSAwIDAgMS4xNSA1NDEuMTkgNTIyLjgyKSIgID4KPGcgc3R5bGU9IiIgdmVjdG9yLWVmZmVjdD0ibm9uLXNjYWxpbmctc3Ryb2tlIiAgID4KCQk8ZyB0cmFuc2Zvcm09Im1hdHJpeCgxLjU2IDAgMCAxLjU2IC0xNTUuMDggLTQ1LjkzKSIgID4KPHBhdGggc3R5bGU9InN0cm9rZTogbm9uZTsgc3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiBub25lOyBzdHJva2UtbGluZWNhcDogYnV0dDsgc3Ryb2tlLWRhc2hvZmZzZXQ6IDA7IHN0cm9rZS1saW5lam9pbjogbWl0ZXI7IHN0cm9rZS1taXRlcmxpbWl0OiA0OyBmaWxsOiByZ2IoMCwwLDApOyBmaWxsLXJ1bGU6IG5vbnplcm87IG9wYWNpdHk6IDE7IiB2ZWN0b3ItZWZmZWN0PSJub24tc2NhbGluZy1zdHJva2UiICB0cmFuc2Zvcm09IiB0cmFuc2xhdGUoLTE1NywgLTIyNi44NSkiIGQ9Ik0gMjQ2LjU5NyA5Ny4zMjUgQyAyNDIuNzEzMDAwMDAwMDAwMDIgODIuMzI2MDAwMDAwMDAwMDEgMjI5LjE4MyA3MS44NTMwMDAwMDAwMDAwMSAyMTMuNjc2MDAwMDAwMDAwMDIgNzEuODUzMDAwMDAwMDAwMDEgTCA5Ny4wMTMgNzEuODUzMDAwMDAwMDAwMDEgQyA4Ny42MTgwMDAwMDAwMDAwMSA3MS44NTMwMDAwMDAwMDAwMSA3OS45OTcwMDAwMDAwMDAwMSA3OS40NjYwMDAwMDAwMDAwMSA3OS45OTcwMDAwMDAwMDAwMSA4OC44NTQwMDAwMDAwMDAwMSBMIDc5Ljk5NzAwMDAwMDAwMDAxIDI0OS44NDkwMDAwMDAwMDAwMiBMIDE3LjAwNzAwMDAwMDAwMDAxMiAyNDkuODQ5MDAwMDAwMDAwMDIgQyA3LjYxMyAyNDkuODQ5IDAgMjU3LjQ2MiAwIDI2Ni44NTYgTCAwIDM4MS44NTQgTCAxOS4xODEgMzgxLjg1NCBDIDIzLjUyNyAzNTMuNDA0IDQ4LjE1NSAzMzEuNTQyIDc3LjgwMSAzMzEuNTQyIEMgMTA3LjQzOTAwMDAwMDAwMDAxIDMzMS41NDIgMTMyLjA2OCAzNTMuNDA0IDEzNi40MjEgMzgxLjg1NCBMIDE4Ny4xNzkgMzgxLjg1NCBDIDE5MS41MjUgMzUzLjQwNCAyMTYuMTUzIDMzMS41NDIgMjQ1Ljc5OSAzMzEuNTQyIEMgMjc1LjQzOCAzMzEuNTQyIDMwMC4wNjYwMDAwMDAwMDAwMyAzNTMuNDA0IDMwNC40MiAzODEuODU0IEwgMzEzLjk5NCAzODEuODU0IEwgMzEzLjk5NCAyNDkuODQ5IEwgMjg2LjE0NiAyNDkuODQ5IEwgMjQ2LjU5NyA5Ny4zMjUgeiBNIDEyNy45OTYgMjM5Ljg1MiBMIDEyNy45OTYgMTE5Ljg0NCBMIDIwMi44NTggMTE5Ljg0NCBMIDIzMy45NjYgMjM5Ljg1MyBMIDEyNy45OTYgMjM5Ljg1MyB6IiBzdHJva2UtbGluZWNhcD0icm91bmQiIC8+CjwvZz4KCQk8ZyB0cmFuc2Zvcm09Im1hdHJpeCgxLjU2IDAgMCAxLjU2IDI1NC40NiAtMzAuMzQpIiAgPgo8cG9seWdvbiBzdHlsZT0ic3Ryb2tlOiBub25lOyBzdHJva2Utd2lkdGg6IDE7IHN0cm9rZS1kYXNoYXJyYXk6IG5vbmU7IHN0cm9rZS1saW5lY2FwOiBidXR0OyBzdHJva2UtZGFzaG9mZnNldDogMDsgc3Ryb2tlLWxpbmVqb2luOiBtaXRlcjsgc3Ryb2tlLW1pdGVybGltaXQ6IDQ7IGZpbGw6IHJnYigwLDAsMCk7IGZpbGwtcnVsZTogbm9uemVybzsgb3BhY2l0eTogMTsiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgIHBvaW50cz0iLTU1LjAxLDE0MSAtNTUuMDEsLTE2NyAtOTMsLTE2NyAtOTMsMTY3IDkzLDE2NyA5MywxNDEgIiAvPgo8L2c+CgkJPGcgdHJhbnNmb3JtPSJtYXRyaXgoMS41NiAwIDAgMS41NiAtMjc4LjU3IDIxMC41NykiICA+CjxwYXRoIHN0eWxlPSJzdHJva2U6IG5vbmU7IHN0cm9rZS13aWR0aDogMTsgc3Ryb2tlLWRhc2hhcnJheTogbm9uZTsgc3Ryb2tlLWxpbmVjYXA6IGJ1dHQ7IHN0cm9rZS1kYXNob2Zmc2V0OiAwOyBzdHJva2UtbGluZWpvaW46IG1pdGVyOyBzdHJva2UtbWl0ZXJsaW1pdDogNDsgZmlsbDogcmdiKDAsMCwwKTsgZmlsbC1ydWxlOiBub256ZXJvOyBvcGFjaXR5OiAxOyIgdmVjdG9yLWVmZmVjdD0ibm9uLXNjYWxpbmctc3Ryb2tlIiAgdHJhbnNmb3JtPSIgdHJhbnNsYXRlKC03Ny44LCAtMzkwLjg1KSIgZD0iTSA3Ny44MDEgMzM5LjU0NiBDIDQ5LjQ2OCAzMzkuNTQ2IDI2LjQ5NjAwMDAwMDAwMDAwMiAzNjIuNTE3IDI2LjQ5NjAwMDAwMDAwMDAwMiAzOTAuODQyOTk5OTk5OTk5OTYgQyAyNi40OTYwMDAwMDAwMDAwMDIgNDE5LjE3NTk5OTk5OTk5OTkzIDQ5LjQ2OCA0NDIuMTQ3OTk5OTk5OTk5OTcgNzcuODAxIDQ0Mi4xNDc5OTk5OTk5OTk5NyBDIDEwNi4xMzQgNDQyLjE0Nzk5OTk5OTk5OTk3IDEyOS4wOTggNDE5LjE3NiAxMjkuMDk4IDM5MC44NDI5OTk5OTk5OTk5NiBDIDEyOS4wOTggMzYyLjUxNyAxMDYuMTM0IDMzOS41NDYgNzcuODAxIDMzOS41NDYgeiBNIDc3LjgwMSA0MDguNDQ0IEMgNjguMDc4IDQwOC40NDQgNjAuMTk5IDQwMC41NjUgNjAuMTk5IDM5MC44NDIwMDAwMDAwMDAwNCBDIDYwLjE5OSAzODEuMTM0IDY4LjA3OCAzNzMuMjU2MDAwMDAwMDAwMDMgNzcuODAxIDM3My4yNTYwMDAwMDAwMDAwMyBDIDg3LjUyNCAzNzMuMjU2MDAwMDAwMDAwMDMgOTUuMzg3IDM4MS4xMzUwMDAwMDAwMDAwNSA5NS4zODcgMzkwLjg0MjAwMDAwMDAwMDA0IEMgOTUuMzg4IDQwMC41NjYgODcuNTI0IDQwOC40NDQgNzcuODAxIDQwOC40NDQgeiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgo8L2c+CgkJPGcgdHJhbnNmb3JtPSJtYXRyaXgoMS41NiAwIDAgMS41NiAtMTYuMDcgMjEwLjU3KSIgID4KPHBhdGggc3R5bGU9InN0cm9rZTogbm9uZTsgc3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiBub25lOyBzdHJva2UtbGluZWNhcDogYnV0dDsgc3Ryb2tlLWRhc2hvZmZzZXQ6IDA7IHN0cm9rZS1saW5lam9pbjogbWl0ZXI7IHN0cm9rZS1taXRlcmxpbWl0OiA0OyBmaWxsOiByZ2IoMCwwLDApOyBmaWxsLXJ1bGU6IG5vbnplcm87IG9wYWNpdHk6IDE7IiB2ZWN0b3ItZWZmZWN0PSJub24tc2NhbGluZy1zdHJva2UiICB0cmFuc2Zvcm09IiB0cmFuc2xhdGUoLTI0NS44LCAtMzkwLjg1KSIgZD0iTSAyNDUuOCAzMzkuNTQ2IEMgMjE3LjQ2NyAzMzkuNTQ2IDE5NC40OTYgMzYyLjUxNyAxOTQuNDk2IDM5MC44NDI5OTk5OTk5OTk5NiBDIDE5NC40OTYgNDE5LjE3NTk5OTk5OTk5OTkzIDIxNy40NjcgNDQyLjE0Nzk5OTk5OTk5OTk3IDI0NS44IDQ0Mi4xNDc5OTk5OTk5OTk5NyBDIDI3NC4xMzQgNDQyLjE0Nzk5OTk5OTk5OTk3IDI5Ny4wOTcgNDE5LjE3NiAyOTcuMDk3IDM5MC44NDI5OTk5OTk5OTk5NiBDIDI5Ny4wOTcgMzYyLjUxNyAyNzQuMTM0IDMzOS41NDYgMjQ1LjggMzM5LjU0NiB6IE0gMjQ1LjggNDA4LjQ0NCBDIDIzNi4wNzcgNDA4LjQ0NCAyMjguMTk4IDQwMC41NjUgMjI4LjE5OCAzOTAuODQyMDAwMDAwMDAwMDQgQyAyMjguMTk4IDM4MS4xMzQgMjM2LjA3NyAzNzMuMjU2MDAwMDAwMDAwMDMgMjQ1LjggMzczLjI1NjAwMDAwMDAwMDAzIEMgMjU1LjUyNCAzNzMuMjU2MDAwMDAwMDAwMDMgMjYzLjM4NiAzODEuMTM1MDAwMDAwMDAwMDUgMjYzLjM4NiAzOTAuODQyMDAwMDAwMDAwMDQgQyAyNjMuMzg2IDQwMC41NjYgMjU1LjUyMyA0MDguNDQ0IDI0NS44IDQwOC40NDQgeiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgo8L2c+CjwvZz4KPC9nPgo8L3N2Zz4=" />
+  <script> 
+    // Credit: JoyStick Project (https://github.com/bobboteck/JoyStick).
+    let StickStatus={xPosition:0,yPosition:0,x:0,y:0,cardinalDirection:"C"};var JoyStick=function(t,e,i){var o=void 0===(e=e||{}).title?"joystick":e.title,n=void 0===e.width?0:e.width,a=void 0===e.height?0:e.height,r=void 0===e.internalFillColor?"#00AA00":e.internalFillColor,c=void 0===e.internalLineWidth?2:e.internalLineWidth,s=void 0===e.internalStrokeColor?"#003300":e.internalStrokeColor,d=void 0===e.externalLineWidth?2:e.externalLineWidth,u=void 0===e.externalStrokeColor?"#008000":e.externalStrokeColor,h=void 0===e.autoReturnToCenter||e.autoReturnToCenter;i=i||function(t){};var S=document.getElementById(t);S.style.touchAction="none";var f=document.createElement("canvas");f.id=o,0===n&&(n=S.clientWidth),0===a&&(a=S.clientHeight),f.width=n,f.height=a,S.appendChild(f);var l=f.getContext("2d"),k=0,g=2*Math.PI,x=(f.width-(f.width/2+10))/2,v=x+5,P=x+30,m=f.width/2,C=f.height/2,p=f.width/10,y=-1*p,w=f.height/10,L=-1*w,F=m,E=C;function W(){l.beginPath(),l.arc(m,C,P,0,g,!1),l.lineWidth=d,l.strokeStyle=u,l.stroke()}function T(){l.beginPath(),F<x&&(F=v),F+x>f.width&&(F=f.width-v),E<x&&(E=v),E+x>f.height&&(E=f.height-v),l.arc(F,E,x,0,g,!1);var t=l.createRadialGradient(m,C,5,m,C,200);t.addColorStop(0,r),t.addColorStop(1,s),l.fillStyle=t,l.fill(),l.lineWidth=c,l.strokeStyle=s,l.stroke()}function D(){let t="",e=F-m,i=E-C;return i>=L&&i<=w&&(t="C"),i<L&&(t="N"),i>w&&(t="S"),e<y&&("C"===t?t="W":t+="W"),e>p&&("C"===t?t="E":t+="E"),t}"ontouchstart"in document.documentElement?(f.addEventListener("touchstart",function(t){k=1},!1),document.addEventListener("touchmove",function(t){1===k&&t.targetTouches[0].target===f&&(F=t.targetTouches[0].pageX,E=t.targetTouches[0].pageY,"BODY"===f.offsetParent.tagName.toUpperCase()?(F-=f.offsetLeft,E-=f.offsetTop):(F-=f.offsetParent.offsetLeft,E-=f.offsetParent.offsetTop),l.clearRect(0,0,f.width,f.height),W(),T(),StickStatus.xPosition=F,StickStatus.yPosition=E,StickStatus.x=((F-m)/v*100).toFixed(),StickStatus.y=((E-C)/v*100*-1).toFixed(),StickStatus.cardinalDirection=D(),i(StickStatus))},!1),document.addEventListener("touchend",function(t){k=0,h&&(F=m,E=C);l.clearRect(0,0,f.width,f.height),W(),T(),StickStatus.xPosition=F,StickStatus.yPosition=E,StickStatus.x=((F-m)/v*100).toFixed(),StickStatus.y=((E-C)/v*100*-1).toFixed(),StickStatus.cardinalDirection=D(),i(StickStatus)},!1)):(f.addEventListener("mousedown",function(t){k=1},!1),document.addEventListener("mousemove",function(t){1===k&&(F=t.pageX,E=t.pageY,"BODY"===f.offsetParent.tagName.toUpperCase()?(F-=f.offsetLeft,E-=f.offsetTop):(F-=f.offsetParent.offsetLeft,E-=f.offsetParent.offsetTop),l.clearRect(0,0,f.width,f.height),W(),T(),StickStatus.xPosition=F,StickStatus.yPosition=E,StickStatus.x=((F-m)/v*100).toFixed(),StickStatus.y=((E-C)/v*100*-1).toFixed(),StickStatus.cardinalDirection=D(),i(StickStatus))},!1),document.addEventListener("mouseup",function(t){k=0,h&&(F=m,E=C);l.clearRect(0,0,f.width,f.height),W(),T(),StickStatus.xPosition=F,StickStatus.yPosition=E,StickStatus.x=((F-m)/v*100).toFixed(),StickStatus.y=((E-C)/v*100*-1).toFixed(),StickStatus.cardinalDirection=D(),i(StickStatus)},!1)),W(),T(),this.GetWidth=function(){return f.width},this.GetHeight=function(){return f.height},this.GetPosX=function(){return F},this.GetPosY=function(){return E},this.GetX=function(){return((F-m)/v*100).toFixed()},this.GetY=function(){return((E-C)/v*100*-1).toFixed()},this.GetDir=function(){return D()}};
+  </script>
+
+  <style>
+    .arrows {
+      font-size:50px;
+      color:grey;
+    }
+    td.button {
+      background-color:black;
+      border-radius:20%;
+      box-shadow: 5px 5px #888888;
+    }
+    td.button:active {
+      transform: translate(5px,5px);
+      box-shadow: none; 
+    }
+
+    .noselect {
+      -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+         -khtml-user-select: none; /* Konqueror HTML */
+           -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                      supported by Chrome and Opera */
+    }
+
+    .slidecontainer {
+      width: 100%;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 20px;
+      border-radius: 5px;
+      background: #d3d3d3;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+
+    .slider:hover {
+      opacity: 1;
+    }
+  
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: red;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: red;
+      cursor: pointer;
+    }
+
+    </style>
+  
+  </head>
+  <!--<body class="noselect" style="background-color:white; text-align:center;">-->
+    <body style="background-color:white; text-align:center;"> 
+     
+    <div class="slidecontainer"></div>
+    <!--<label for="powerSwitch" style="font-size: 20px;">HorizontalScreen:</label>
+    <input type="checkbox" id="powerSwitch" class="power-switch" onchange='sendButtonInput("Switch", 0)'>-->
+    </div> 
+    <h1 id="title" style="color: black;text-align:center;">MINISKIDI</h1>
+
+    <div id="joy2Div" style="width:200px;height:200px;margin:auto"><h3 style="margin-bottom: -10px;">Movement</h3></div>
+    <!--X :<input id="joy2X" type="text" /></br>
+    Y :<input id="joy2Y" type="text" />
+    Direzione:<input id="joy2Direzione" type="text" /></br>-->
+
+    <div id="joy3Div" style="width:200px;height:200px;margin:auto"><h3 style="margin-bottom: -10px;">Arm</h3></div>
+
+    <button ontouchstart='sendButtonInput("Wiggle")'onmousedown='sendButtonInput("Wiggle")'>Wiggle</button>
+        
+    <table id="mainTable" style="width:400px;margin:auto;table-layout:fixed" CELLSPACING=10>
+      <!--<tr>
+        <td></td>
+        <td class="button" ontouchstart='sendButtonInput("MoveCar","1")'onmousedown='sendButtonInput("MoveCar","1")'onmouseup='sendButtonInput("MoveCar","0")' ontouchend='sendButtonInput("MoveCar","0")'><span class="arrows" >&#8679;</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="button" ontouchstart='sendButtonInput("MoveCar","3")'onmousedown='sendButtonInput("MoveCar","3")'onmouseup='sendButtonInput("MoveCar","0")' ontouchend='sendButtonInput("MoveCar","0")'><span class="arrows" >&#8678;</span></td>
+        <td class="button"></td>    
+        <td class="button" ontouchstart='sendButtonInput("MoveCar","4")'onmousedown='sendButtonInput("MoveCar","4")'onmouseup='sendButtonInput("MoveCar","0")' ontouchend='sendButtonInput("MoveCar","0")'><span class="arrows" >&#8680;</span></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="button" ontouchstart='sendButtonInput("MoveCar","2")'onmousedown='sendButtonInput("MoveCar","2")'onmouseup='sendButtonInput("MoveCar","0")' ontouchend='sendButtonInput("MoveCar","0")'><span class="arrows" >&#8681;</span></td>
+        <td></td>
+      </tr>
+      <tr/>
+      <tr/>
+      <tr/><tr/>-->
+      <!--<tr>
+        <td class="button" ontouchstart='sendButtonInput("MoveCar","6")'onmousedown='sendButtonInput("MoveCar","6")'onmouseup='sendButtonInput("MoveCar","0")' ontouchend='sendButtonInput("MoveCar","0")'><span class="arrows" >&#8678;</span></td>
+        <td class="button" ontouchstart='sendButtonInput("Light","6")'onmousedown='sendButtonInput("Light","6")'onmouseup='sendButtonInput("MoveCar","0")' ontouchend='sendButtonInput("MoveCar","0")'><span class="arrows" >&#9788;</span></td>  
+        <td class="button" ontouchstart='sendButtonInput("MoveCar","5")'onmousedown='sendButtonInput("MoveCar","5")'onmouseup='sendButtonInput("MoveCar","0")' ontouchend='sendButtonInput("MoveCar","0")'><span class="arrows" >&#8680;</span></td>
+      </tr>-->
+      <tr/>
+      <tr/>
+      <tr/><tr/>
+      <tr>
+        <td style="text-align:left;font-size:25px"><b>Bucket:</b></td>
+        <td colspan=2>
+         <div class="slidecontainer">
+            <input type="range" min="10" max="180" value="90" class="slider" id="Bucket" oninput='sendButtonInput("Bucket",value)'>
+          </div>
+        </td>
+      </tr>  
+            <tr/>
+      <tr/>
+      <tr/><tr/> 
+      <tr>
+        <td style="text-align:left;font-size:25px"><b>AUX:</b></td>
+        <td colspan=2>
+         <div class="slidecontainer">
+            <input type="range" min="10" max="180" value="90" class="slider" id="AUX" oninput='sendButtonInput("AUX",value)'>
+          </div>
+        </td>
+      </tr> 
+
+    </table>
+    <br>
+    <button onclick="toggle('editor')">Toggle Editor</button><br>
+    
+
+    <div style="display:block;" id="editor">
+      <h2>Editor</h2>
+      <input type="button" onclick="FramesPlay()" value="Play Saved Frames"> </input>
+      <input type="button" onclick="FramesStop()" value="Stop Playing"> </input><br><br>
+      Animation Speed (In ms): <input id="framespeed" name="frspeed" type="number" value="350" size="4"> | Loop:
+      <input type="checkbox" id="floop"> | 
+      Selected Sequence: <select id="seqdrop" onchange="FramesShow(this.selectedOptions[0].text);SeqEdit();"></select><br><br>
+      <!-- Selected Sequence:<input id="seqdrop" name="frame" type="number" value="1" size="4"> <input type="button" id="b2" onclick="SeqLoad()" value="Load Sequence"> </input><br><br>-->
+      <label for="fname">Command:</label>
+      <input type="text" id="cmd" name="cmd"> | 
+      <label for="fname">Run time(s):</label>
+      <input type="text" id="Rtime" name="Rtime" size="4">
+      <input type="button" onclick="FramesPlayTest()" value="Test CMD"> </input>
+      <input type="button" id="b2" onclick="FrameSave()" value="Frame Save"> </input>
+      <input type="button" id="b2" onclick="SeqDelete()" value="Delete Sequence"> </input>
+      <input type="button" id="b2" onclick="SeqDelete(true)" value="Delete All Sequences"> </input>
+      <!--<div id="frames"></div>--><br><br>
+      Sequence Name: <input id="seqname" name="seqname" type="text" value="" size="15"><!-- | Frame Num: <input id="framenum" name="frame" type="number" value="" size="4">-->
+      <!--<input type="button" id="b2" onclick="FrameUpdate(document.getElementById('framenum').value)" value="Frame Update"> </input>-->
+      <input type="button" id="b2" onclick="FramesShow()" value="Show Frames"> </input>
+      <input type="button" id="b2" onclick="SeqEdit(true);" value="Toggle Raw JSON Editor"> </input><br><br>
+      <div id="frameList"></div>
+      <div style="display: none;" id="jsonedit">
+        <textarea id="jsoneditTA" rows="10" cols="55"></textarea><br>
+        <input type="button" id="b2" onclick="SeqEditSave()" value="Save"> </input><br><br>
+      </div>
+      <button onclick="toggle('cmdEx')">Toggle Command Examples</button><br>
+      <div style="display:none;" id="cmdEx">
+      <h3>Command Examples:</h3>
+      <p>Move Forward - "LXY, 5, 100" | Move Back - "LXY, 5, -100"</p>
+      <p>Move Left - "LXY, 100, 5" | Move Right - "LXY, -100, 5"</p>
+      <p>Arm up - "RXY, 5, 100" | Arm Down - "RXY, 5, -100"</p>
+      <p>Wiggle - "Wiggle"</p>
+      <p>Bucket top - "Bucket, 180" | Bucket bottom - "Bucket, 10"</p>
+      <p>Claw/AUX fully open - "AUX, 180" | Claw/AUX fully closed - "AUX, 10"</p>
+      </div>
+
+    </div> 
+  
+    <script>
+      let url= new URL(window.location.href);
+      let params = new URLSearchParams(url.search);
+      let hasIP = params.has('ip');
+
+      if(hasIP){
+        // Replace full stops(.) in IP for Dashes(-)
+        let IP = params.get('ip');
+        //var webSocketCarInputUrl = "ws:\/\/" + "192.168.0.52" + "/CarInput";
+        var webSocketCarInputUrl = "ws:\/\/" + IP.replaceAll('-', '.') + "/CarInput";
+      } else {
+        var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
+      }
+
+      //var webSocketCarInputUrl = "ws:\/\/" + "192.168.0.52" + "/CarInput";
+      //var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
+      var websocketCarInput;
+      const auxSlider = document.getElementById('AUX');
+      const bucketSlider = document.getElementById('Bucket');
+      
+      function initCarInputWebSocket() 
+      {
+        websocketCarInput = new WebSocket(webSocketCarInputUrl);
+        websocketCarInput.onclose   = function(event){setTimeout(initCarInputWebSocket, 2000);};
+        websocketCarInput.onmessage = function(event){ console.log("WS Message Received: " + event.data); batteryUpdate(event.data); };        
+      }
+
+      function batteryUpdate(data){
+        if(data.includes("%")){
+          document.getElementById("title").innerHTML="MINISKIDI - &#x1F50B;" + data;
+        }
+      }
+
+      function sendButtonInput(key, value) 
+      {
+      if(websocketCarInput.readyState == websocketCarInput.OPEN){
+       var data = key + "," + value;
+       websocketCarInput.send(data);
+      }
+      }
+      function handleKeyDown(event) {
+        if (event.keyCode === 38) { // Up Arrow
+            sendButtonInput("LXY, 5, 100");
+        }
+        if (event.keyCode === 40) // Down Arrow
+        {
+          sendButtonInput("LXY, 5, -100");
+        }
+        if (event.keyCode ===37) // Left Arrow
+        {
+          sendButtonInput("LXY, 100, 5");
+        }
+        if (event.keyCode ===39) // Right Arrow
+        {
+          sendButtonInput("LXY, -100, 5");
+        }
+        if (event.keyCode === 87) // W
+        {
+          sendButtonInput("RXY, 5, 100");
+        }
+        if (event.keyCode === 83) // S
+        {
+          sendButtonInput("RXY, 5, -100");
+        }
+        if(event.keyCode === 69) // E
+        {
+          auxSlider.value = parseInt(auxSlider.value) + 5; // You can adjust the increment value as needed
+          sendButtonInput("AUX",auxSlider.value);
+      // Trigger the 'input' event on the slider to update its value
+          auxSlider.dispatchEvent(new Event('input'));
+        }
+        if(event.keyCode === 68) // D
+        {
+          auxSlider.value = parseInt(auxSlider.value) - 5; // You can adjust the increment value as needed
+          sendButtonInput("AUX",auxSlider.value);
+      // Trigger the 'input' event on the slider to update its value
+          auxSlider.dispatchEvent(new Event('input'));
+        }
+        if(event.keyCode === 81) // Q
+        {
+          bucketSlider.value = parseInt(bucketSlider.value) + 5; // You can adjust the increment value as needed
+          sendButtonInput("Bucket",bucketSlider.value);
+      // Trigger the 'input' event on the slider to update its value
+          bucketSlider.dispatchEvent(new Event('input'));
+        }
+        if(event.keyCode === 65) // A
+        {
+          bucketSlider.value = parseInt(bucketSlider.value) - 5; // You can adjust the increment value as needed
+          sendButtonInput("Bucket",bucketSlider.value);
+      // Trigger the 'input' event on the slider to update its value
+          bucketSlider.dispatchEvent(new Event('input'));
+        }
+        }
+      function handleKeyUp(event) {
+        if (event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40 || event.keyCode === 87 || event.keyCode === 83) {
+            console.log("key up");
+            sendButtonInput("LXY, 0, 0");
+            sendButtonInput("RXY, 0, 0");
+        }
+    }  
+  
+      window.onload = initCarInputWebSocket;
+      document.getElementById("mainTable").addEventListener("touchend", function(event){
+        event.preventDefault()
+      });
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keyup', handleKeyUp); 
+
+
+// Create JoyStick object into the DIV 'joy2Div'
+var joy2Param = { "title": "joystick2" };
+var Joy2 = new JoyStick('joy2Div', joy2Param);
+
+//var joy2IinputPosX = document.getElementById("joy2PosizioneX");
+//var joy2InputPosY = document.getElementById("joy2PosizioneY");
+//var joy2Direzione = document.getElementById("joy2Direzione");
+//var joy2X = document.getElementById("joy2X");
+//var joy2Y = document.getElementById("joy2Y");
+
+//setInterval(function(){ joy2X.value=Joy2.GetX(); }, 50);
+//setInterval(function(){ joy2Y.value=Joy2.GetY(); }, 50);
+//setInterval(function(){ joy2Direzione.value=Joy2.GetDir(); }, 50);
+
+var Joy2oldX;
+var Joy2oldY;
+
+setInterval(function(){  
+  if(Joy2.GetX() != 0 && Joy2.GetY() != 0){
+    sendButtonInput("LXY", Joy2.GetX() + "," + Joy2.GetY());
+    console.log("LXY: " + Joy2.GetX() + "," + Joy2.GetY());
+  }
+  if (Joy2oldX != 0 && Joy2.GetX() == 0 || Joy2oldY != 0 && Joy2.GetY() == 0){
+    sendButtonInput("LXY", Joy2.GetX() + "," + Joy2.GetY());
+    console.log("LXY: " + Joy2.GetX() + "," + Joy2.GetY());
+  }
+  Joy2oldX = Joy2.GetX();
+  Joy2oldY = Joy2.GetY();
+}, 50);
+
+var Joy3Param = { "title": "joystick3" };
+var Joy3 = new JoyStick('joy3Div', Joy3Param);
+
+//var Joy3IinputPosX = document.getElementById("Joy3PosizioneX");
+//var Joy3InputPosY = document.getElementById("Joy3PosizioneY");
+//var Joy3Direzione = document.getElementById("Joy3Direzione");
+//var Joy3X = document.getElementById("Joy3X");
+//var Joy3Y = document.getElementById("Joy3Y");
+
+//setInterval(function(){ Joy3X.value=Joy3.GetX(); }, 50);
+//setInterval(function(){ Joy3Y.value=Joy3.GetY(); }, 50);
+//setInterval(function(){ Joy3Direzione.value=Joy3.GetDir(); }, 50);
+
+var Joy3oldX;
+var Joy3oldY;
+
+setInterval(function(){  
+  if(Joy3.GetX() != 0 && Joy3.GetY() != 0){
+    sendButtonInput("RXY", Joy3.GetX() + "," + Joy3.GetY());
+    console.log("RXY: " + Joy3.GetX() + "," + Joy3.GetY());
+  }
+  if (Joy3oldX != 0 && Joy3.GetX() == 0 || Joy3oldY != 0 && Joy3.GetY() == 0){
+    sendButtonInput("RXY", Joy3.GetX() + "," + Joy3.GetY());
+    console.log("RXY: " + Joy3.GetX() + "," + Joy3.GetY());
+  }
+  Joy3oldX = Joy3.GetX();
+  Joy3oldY = Joy3.GetY();
+}, 50);
+       
+
+var FrameNum = 0
+var FrameArr = [0];
+var loadedSeq = 0;
+
+function FramesPlayTest() {
+  var Rtime = document.getElementById('Rtime').value;
+  //if(Rtime <= 0){ Rtime = 1; }
+  //for (let i = 0; i < Rtime; i++) {
+  sendButtonInput(document.getElementById('cmd').value);
+  //}
+  setTimeout(function () {
+    sendButtonInput("LXY, 0, 0")
+    sendButtonInput("RXY, 0, 0")
+  }, Rtime*1000);
+}
+
+function FrameSave() {
+  FrameNum++;
+  //var IdStore = new Array();
+  var seq = document.getElementById('seqdrop').value;
+  let newSeq = false;
+  if (localStorage.getItem(seq) == null) {
+    seq = "MSE_SEQ" + (document.getElementById('seqdrop').options.length - 1);
+    localStorage.setItem(seq, '{    "name":"",    "frames":[           ] }');  
+    newSeq = true;
+  }
+  //console.log(seq);
+  LitLed = localStorage.getItem(seq);
+  var loadedSeqAr2 = JSON.parse(LitLed);
+  var loadedSeqAr3 = loadedSeqAr2
+  var loadedname = loadedSeqAr3.name
+  //console.log(loadedname);
+  //console.log(loadedSeqAr3.frames[1]);
+  var name = document.getElementById('seqname').value;
+  loadedSeqAr3.name = name;
+  var cmd = document.getElementById('cmd').value;
+  var rtime = document.getElementById('Rtime').value;
+  var array = {
+    'cmd': cmd,
+    'rtime': rtime
+  };
+  loadedSeqAr3.frames.push(array);
+  var json_str = JSON.stringify(loadedSeqAr3);
+  localStorage.setItem(seq, json_str);
+  //FramesShow();
+  if(newSeq) {
+  SequenceDropdown();
+  }
+  SeqEdit();
+}
+
+function FrameUpdate(frame) {
+  var seq = document.getElementById('seqdrop').value;
+  if (localStorage.getItem(seq) !== null) {
+    alert("Invalid Sequence Selected");
+  } else {
+  LitLed = localStorage.getItem(seq);
+  var loadedSeqAr2 = JSON.parse(LitLed);
+  var cmd = document.getElementById('cmd').value;
+  var rtime = document.getElementById('Rtime').value;
+
+  //console.log(loadedSeqAr2.frames[frame].cmd);  
+  loadedSeqAr2.frames[frame].cmd = cmd;
+  loadedSeqAr2.frames[frame].rtime = rtime;
+
+  var json_str = JSON.stringify(loadedSeqAr2);
+  localStorage.setItem(seq, json_str);
+  FramesShow();
+  }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+var FTimeout;
+var FTimeout2;
+
+async function FramesPlay() {
+  framespeed = document.getElementById('framespeed').value;
+  floop = document.getElementById("floop");
+  //console.log("play");
+  var seq = document.getElementById('seqdrop').value;
+  LitLed = localStorage.getItem(seq);
+  var loadedSeqAr2 = JSON.parse(LitLed);
+  if (loadedSeqAr2 === undefined || loadedSeqAr2.frames.length == 0) {
+  } else {
+
+      for (let i = 0; i < loadedSeqAr2.frames.length; i++) {
+        var Rtime = loadedSeqAr2.frames[i].rtime*1000;
+        var cmd = loadedSeqAr2.frames[i].cmd
+        //console.log(cmd);
+        setTimeout(function () {
+          //console.log(loadedSeqAr[i]);
+
+          console.log("CMD: " + cmd + " - Run time(s): " + Rtime);
+          //if(Rtime <= 0){ Rtime = 1; }
+          //for (let i = 0; i < Rtime; i++) {
+          sendButtonInput(cmd);
+
+        //setTimeout(function () {
+        //  sendButtonInput("LXY, 0, 0");
+        //  sendButtonInput("RXY, 0, 0");
+        //}, Rtime * i);
+          //}
+        }, framespeed * i);
+
+        await sleep(Rtime);
+        sendButtonInput("LXY, 0, 0");
+        sendButtonInput("RXY, 0, 0");
+
+      }
+
+
+      
+      if (floop.checked) {
+          FTimeout2 = setTimeout(FramesPlay, 2000);
+      }
+
+  }
+}
+
+function FramesStop() {
+    clearTimeout(FTimeout);
+    clearTimeout(FTimeout2);
+}
+
+function FramesShow(selected) {
+    var seq = document.getElementById('seqdrop').value;
+    if(selected == "New"){
+      return false;
+    } else if (localStorage.getItem(seq) === null) {
+      alert("Invalid Sequence Selected");
+    } else {
+        frames = localStorage.getItem(seq);
+        framesp = JSON.parse(frames);
+        document.getElementById("frameList").innerHTML="";
+        var list = document.createElement("div");
+        const textnode = document.createTextNode("Sequence "+ seq.replace('MSE_SEQ', '') +" '"+ framesp.name +"' Frames:");
+        //console.log(framesp.name);
+        list.appendChild(textnode);
+        for(let i = 0; i < framesp.frames.length; i++) {
+            let item = document.createElement("p");
+            item.innerHTML = "Frame: " + i + " CMD: '" + framesp.frames[i].cmd + "' - Run time(s): " + framesp.frames[i].rtime;
+            list.appendChild(item);
+            document.getElementById("frameList").appendChild(list);
+        }
+    }
+}
+
+window.addEventListener("load", (event) => {
+  exampleSeq();
+  SequenceDropdown();
+});
+
+function exampleSeq(){
+  if (localStorage.getItem("MSE_SEQ0") === null) {
+    localStorage.setItem("MSE_SEQ0", '{ "name": "Forward and turn", "frames": [  {   "cmd": "LXY, 5, 100",   "rtime": "4"  },  {   "cmd": "LXY, 100, 5",   "rtime": "1.5"  },  {   "cmd": "LXY, 5, 100",   "rtime": "4"  } ]}');  
+  }
+}
+
+function SeqDelete(all) {
+  if(all){
+    var r = confirm("Are you sure you want all sequences?");
+    if (r == true) {
+      var startsWith = "MSE_SEQ";
+      var myLength = startsWith.length;
+      Object.keys(localStorage) 
+        .forEach(function(key){
+          if (key.substring(0,myLength) == startsWith) {
+            localStorage.removeItem(key); 
+          } 
+        }); 
+        //FrameNum = 0;
+      }
+  } else {
+  var r = confirm("Are you sure you want to this sequence?");
+  if (r == true) {
+    var seq = document.getElementById('seqdrop').value;
+    if(seq == "New"){
+      return false;
+    } else if (localStorage.getItem(seq) === null) {
+      alert("Invalid Sequence Selected");
+    } else {
+      localStorage.removeItem(seq);
+    }
+  }
+}
+exampleSeq();
+SequenceDropdown();
+}
+
+function SequenceDropdown() {
+  var seqdrop = document.getElementById("seqdrop");
+  let options = document.querySelectorAll('#seqdrop option');
+  if(options.length > 0){
+    //console.log("ops");
+    document.getElementById('seqdrop').options.length = 0;
+  }
+  for (let i = 0; i < localStorage.length + 1; i++) {
+    const key = localStorage.key(i);
+    //console.log(i);
+    //console.log(localStorage.getItem(key));
+    if(key !== null && key.includes("MSE_SEQ")){
+    parsedLS = JSON.parse(localStorage.getItem(key));
+    //console.log(`${key}: ${localStorage.getItem(key)}`)
+    //console.log(parsedLS.name);
+    //console.log(key);
+    //if(i == (localStorage.length)){
+    //var length = localStorage.length + 1;
+    //var option = document.createElement("OPTION");
+    //option.innerHTML = "New";
+    //option.value = "MSE_SEQ" + length;
+    //} else {
+    var option = document.createElement("OPTION");
+    option.innerHTML = key.replace('MSE_SEQ', '') + "/" + parsedLS.name;
+    option.value = key;
+    //}
+    
+    seqdrop.options.add(option)
+    }
+}
+
+var length = seqdrop.options.length + 1;
+var option = document.createElement("OPTION");
+option.innerHTML = "New";
+option.value = "MSE_SEQ" + length;
+seqdrop.options.add(option)
+
+//var seqselected = document.getElementById("seqdrop").innerHTML;
+//console.log(seqselected);
+//var seqname = document.getElementById("seqname");
+//seqname.value = innerHTML;
+
+}
+
+function SeqEdit(show) {
+  var seq = document.getElementById('seqdrop').value;
+  frames = localStorage.getItem(seq);
+  parseFrames = JSON.parse(frames);
+  document.getElementById("jsoneditTA").value = JSON.stringify(parseFrames, null, 4);
+  if(show){
+  toggle('jsonedit');
+  //document.getElementById("jsonedit").style.display = " initial";
+  }
+}
+
+function SeqEditSave() {
+  var seq = document.getElementById('seqdrop').value;
+  editedJson = document.getElementById("jsoneditTA").value;
+  const obj = eval("(" + editedJson + ")");
+  var json_str = JSON.stringify(obj);
+  localStorage.setItem(seq, json_str);
+  SeqEdit();
+}
+
+function toggle(divID) {
+  var x = document.getElementById(divID);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+} 
+
+    </script>
+  </body>    
+</html>
+)HTMLHOMEPAGE";
