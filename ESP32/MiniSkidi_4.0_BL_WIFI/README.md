@@ -12,3 +12,9 @@ The Arduino Sketch has [ElegantOTA](https://github.com/ayushsharma82/ElegantOTA)
 Here is an example movement sequence, which is included by default as sequence 0.
 
 ![img_seq](sequence.gif)
+
+### Web Interface Pictures
+
+![img_wi1](wi1.png)
+
+![img_wi2](wi2.png)
