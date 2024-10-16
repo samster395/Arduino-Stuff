@@ -9,9 +9,9 @@ The web interface has been heavily edited including adding on screen joysticks t
 
 The Arduino Sketch has [ElegantOTA](https://github.com/ayushsharma82/ElegantOTA) to update it without plugging it in.
 
-Here is an example movement sequence, which is included by default as sequence 0.
+Here are some example movement sequences, the first one is included by default as sequence 0.
 
-![img_seq1](seq1.gif) ![img_seq2](seq2.gif)
+<img src="seq1.gif" width="400"> <img src="seq2.gif" width="400">
 
 ### Web Interface Pictures
 
