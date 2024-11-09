@@ -10,6 +10,7 @@
 #include <iostream>
 #include <sstream>
 #include <Adafruit_NeoPixel.h>
+#include <ESPmDNS.h>
 
 //#include <Battery.h>
 
@@ -439,6 +440,14 @@ void setup() {
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+
+  if (!MDNS.begin("miniskidi")) {   // Set the hostname to "esp32.local"
+    Serial.println("Error setting up MDNS responder!");
+    while(1) {
+      delay(1000);
+    }
+  }
+  Serial.println("mDNS responder started");
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     //request->send(200, "text/plain", "Hi! This is ElegantOTA AsyncDemo.");
